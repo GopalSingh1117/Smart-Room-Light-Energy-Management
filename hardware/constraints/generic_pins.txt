@@ -1,0 +1,25 @@
+# Generic FPGA Pin Mapping and Board Adaptation Guide
+
+## 1. Intel / Altera DE10-Lite (MAX 10 - 10M50DAF484C7G)
+When compiling with Intel Quartus Prime for the DE10-Lite development board:
+- Change top_module parameter: `CLK_FREQ_HZ = 50_000_000` (50 MHz onboard clock).
+- Clock: `PIN_P11` (MAX10_CLK1_50)
+- Reset: `PIN_B8` (KEY0, active low; invert in top_module if using KEY0 directly)
+- Pushbuttons: `PIN_A7` (KEY1)
+- Slide Switches: `PIN_C10` (SW0), `PIN_C11` (SW1)
+- GPIO Header JP1 (for sensors and ESP32):
+  - PIR Sensor In: `PIN_V10` (GPIO[0])
+  - ADC SPI CS: `PIN_W10` (GPIO[1])
+  - ADC SPI MOSI: `PIN_V9` (GPIO[2])
+  - ADC SPI MISO: `PIN_W9` (GPIO[3])
+  - ADC SPI SCLK: `PIN_V8` (GPIO[4])
+  - UART TX to ESP32: `PIN_W8` (GPIO[5])
+  - UART RX from ESP32: `PIN_V7` (GPIO[6])
+  - PWM LED Driver Out: `PIN_W7` (GPIO[7])
+- 7-Segment Displays: HEX0 (`PIN_C14..PIN_C17`) and HEX1 (`PIN_C18..PIN_B22`)
+
+## 2. Generic Artix-7 / Spartan-6 / Spartan-7 Custom Boards
+Ensure:
+1. All inputs and outputs configured with `IOSTANDARD LVCMOS33` (3.3V logic).
+2. The `CLK_FREQ_HZ` parameter in `top_module.v` is matched exactly to your oscillator frequency (e.g. 100MHz, 50MHz, 24MHz, or 12MHz).
+3. Connect common ground between the FPGA board, external 12V LED power supply, and ESP32.
